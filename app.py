@@ -8,6 +8,7 @@ LSTM = tf.keras.layers.LSTM
 Dense = tf.keras.layers.Dense
 Dropout = tf.keras.layers.Dropout
 from sklearn.preprocessing import MinMaxScaler
+from datetime import datetime
 
 import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend to avoid Tkinter issues
@@ -20,15 +21,16 @@ import os
 app = Flask(__name__)
 
 # Step 1: Fetch Historical Stock Data
-def fetch_stock_data(ticker, start_date="2020-01-01", end_date="2024-01-01"):
+def fetch_stock_data(ticker, start_date="2020-01-01"):
     try:
+        end_date = datetime.today().strftime('%Y-%m-%d')  # Get today's date
         stock_data = yf.download(ticker, start=start_date, end=end_date)
         if stock_data.empty:
             raise ValueError("No data found for ticker.")
-        return stock_data['Close'].values.reshape(-1, 1), stock_data.index
+        return stock_data['Close'].values.reshape(-1, 1)
     except Exception as e:
         print(f"Error fetching stock data: {e}")
-        return None, None
+        return None
 
 # Step 2: Preprocess Data
 def preprocess_data(data, sequence_length=60):
