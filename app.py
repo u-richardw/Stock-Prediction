@@ -27,10 +27,10 @@ def fetch_stock_data(ticker, start_date="2020-01-01"):
         stock_data = yf.download(ticker, start=start_date, end=end_date)
         if stock_data.empty:
             raise ValueError("No data found for ticker.")
-        return stock_data['Close'].values.reshape(-1, 1)
+        return stock_data['Close'].values.reshape(-1, 1), stock_data.index
     except Exception as e:
         print(f"Error fetching stock data: {e}")
-        return None
+        return None, None
 
 # Step 2: Preprocess Data
 def preprocess_data(data, sequence_length=60):
